@@ -1,59 +1,3 @@
-{
-    "stateMap": {},
-    "bindings": {
-        "input": ["Analytic Agent"],
-        "Analytic Agent": ["Fear Agent", "Sorrow Agent", "Anger Agent", "Joy Agent", "Moderator Agent"],
-        "Fear Agent": ["Analytic Agent", "Moderator Agent"],
-        "Sorrow Agent": ["Analytic Agent", "Moderator Agent"],
-        "Anger Agent": ["Analytic Agent", "Moderator Agent"],
-        "Joy Agent": ["Analytic Agent", "Moderator Agent"],
-        "Moderator Agent": ["Output Agent"],
-        "Output Agent": []
-    },
-    "agents": {
-        "Analytic Agent": {
-            "prompt": "{{hexagram}} respond to the statement {{input}} in the first-person as the Analytic Agent",
-            "responseFields": ["Analytic Agent", "hexagram"]
-        },
-        "Fear Agent": {
-            "prompt": "{{hexagram}} respond to the statement {{input}} in the first-person as the Fear Agent",
-            "responseFields": ["Fear Agent", "hexagram", "intensity"]
-        },
-        "Sorrow Agent": {
-            "prompt": "{{hexagram}} respond to the statement {{input}} in the first-person as the Sorrow Agent",
-            "responseFields": ["Sorrow Agent", "hexagram", "intensity"]
-        },
-        "Anger Agent": {
-            "prompt": "{{hexagram}} respond to the statement {{input}} in the first-person as the Anger Agent",
-            "responseFields": ["Anger Agent", "hexagram", "intensity"]
-        },
-        "Joy Agent": {
-            "prompt": "{{hexagram}} respond to the statement {{input}} in the first-person as the Joy Agent",
-            "responseFields": ["Joy Agent", "hexagram", "intensity"]
-        },
-        "Moderator Agent": {
-            "prompt": "As a moderator, what question would you ask the panel in response to their discussion on {{input}}?",
-            "responseFields": ["Moderator Agent", "hexagram"]
-        },
-        "Output Agent": {
-            "prompt": "",
-            "responseFields": []
-        }
-    },
-    "sources": {
-        "Analytic Agent": "(mind, agent, query, options) => complete(mind, agent, query, options)",
-        "Fear Agent": "(mind, agent, query, options) => complete(mind, agent, query, options)",
-        "Sorrow Agent": "(mind, agent, query, options) => complete(mind, agent, query, options)",
-        "Anger Agent": "(mind, agent, query, options) => complete(mind, agent, query, options)",
-        "Joy Agent": "(mind, agent, query, options) => complete(mind, agent, query, options)",
-        "Moderator Agent": "(mind, agent, query, options) => complete(mind, agent, query, options)",
-        "Output Agent": "(mind, agent, query, options) => mind.stateMap"
-    },
-    "start": {
-        "input": "What do you want to talk about?"
-    }
-}
-
 
 <script lang="ts">
 	import OpenAI from 'openai-api';
@@ -74,55 +18,64 @@
 		let microChat: any;
 		const iChing = '䷀䷁䷂䷃䷄䷅䷆䷇䷈䷉䷊䷋䷌䷍䷎䷏䷐䷑䷒䷓䷔䷕䷖䷗䷘䷙䷚䷛䷜䷝䷞䷟䷠䷡䷢䷣䷤䷥䷦䷧䷨䷩䷪䷫䷬䷭䷮䷯䷰䷱䷲䷳䷴䷵䷶䷷䷸䷹䷺䷻䷼䷽䷾䷿';
 		const mind = new Mind({
-            "stateMap": {},
+            "stateMap": {
+                "intensity1": 0,
+                "intensity2": 0,
+                "intensity3": 0,
+                "intensity4": 0,
+                "intensity5": 0,
+            },
             "bindings": {
-                "input": ["Analytic Agent"],
-                "Analytic Agent": ["Fear Agent"],
-                "Fear Agent": ["Sorrow Agent"],
-                "Sorrow Agent": ["Anger Agent"],
-                "Anger Agent": ["Joy Agent"],
-                "Joy Agent": ["Integrating Agent"],
-                "Integrating Agent": ["Output Agent"],
-                "Output Agent": []
+                "input": ["Analytic"],
+                "Analytic": ["Fear"],
+                "Fear": ["Sorrow"],
+                "Sorrow": ["Anger"],
+                "Anger": ["Joy"],
+                "Joy": ["Integrating"],
+                "Integrating": ["Imagery"],
+                "Imagery": ["output"],
+                "output": []
             },
             "agents": {
-                "Analytic Agent": {
-                    "prompt": "{{hexagram}} respond to the statement {{input}} in the first-person as the Analytic Agent with intensity {{intensity1}} of 10.",
-                    "responseFields": ["Analytic Agent", "hexagram", "intensity1"]
+                "Analytic": {
+                    "prompt": "{{hexagram}} respond to the statement {{input}} in the first-person as an unusually analytical person with intensity {{intensity1}} of 10.",
+                    "responseFields": ["Analytic", "hexagram", "intensity1"]
                 },
-                "Fear Agent": {
-                    "prompt": "{{hexagram}} respond to the statement {{input}} in the first-person as the Fear Agent with intensity {{intensity2}} of 10.",
-                    "responseFields": ["Fear Agent", "hexagram", "intensity2"]
+                "Fear": {
+                    "prompt": "{{hexagram}} respond to the statement {{input}} in the first-person as the Fear with intensity {{intensity2}} of 10.",
+                    "responseFields": ["Fear", "hexagram", "intensity2"]
                 },
-                "Sorrow Agent": {
-                    "prompt": "{{hexagram}} respond to the statement {{input}} in the first-person as the Sorrow Agent with intensity {{intensity3}} of 10.",
-                    "responseFields": ["Sorrow Agent", "hexagram", "intensity3"]
+                "Sorrow": {
+                    "prompt": "{{hexagram}} respond to the statement {{input}} in the first-person as the Sorrow with intensity {{intensity3}} of 10.",
+                    "responseFields": ["Sorrow", "hexagram", "intensity3"]
                 },
-                "Anger Agent": {
-                    "prompt": "{{hexagram}} respond to the statement {{input}} in the first-person as the Anger Agent with intensity {{intensity4}} of 10.",
-                    "responseFields": ["Anger Agent", "hexagram", "intensity4"]
+                "Anger": {
+                    "prompt": "{{hexagram}} respond to the statement {{input}} in the first-person as the Anger with intensity {{intensity4}} of 10.",
+                    "responseFields": ["Anger", "hexagram", "intensity4"]
                 },
-                "Joy Agent": {
-                    "prompt": "{{hexagram}} respond to the statement {{input}} in the first-person as the Joy Agent with intensity {{intensity5}} of 10.",
-                    "responseFields": ["Joy Agent", "hexagram", "intensity5]
+                "Joy": {
+                    "prompt": "{{hexagram}} respond to the statement {{input}} in the first-person as the Joy with intensity {{intensity5}} of 10.",
+                    "responseFields": ["Joy", "hexagram", "intensity5"]
                 },
-                "Integrating Agent": {
-                    "prompt": "{{hexagram}} respond to the statement {{input}} in the first-person, incorporating the perspectives of {{Analytic Agent}}, {{Fear Agent}}, {{Sorrow Agent}}, {{Anger Agent}}, and {{Joy Agent}}.",
-                    "responseFields": ["Integrating Agent", "hexagram", "intensity"]
+                "Integrating": {
+                    "prompt": "{{hexagram}} respond to the statement {{input}} in the first-person, incorporating the perspectives of {{Analytic}}, {{Fear}}, {{Sorrow}}, {{Anger}}, and {{Joy}} into a single, coherent response.",
+                    "responseFields": ["Integrating", "hexagram"]
                 },
-                "Output Agent": {
-                    "prompt": "",
-                    "responseFields": []
-                }
+                "Imagery": {
+                    "prompt": "{{hexagram}} generate a visual description of the contents of the statements '{{input}}', '{{Analytic}}', '{{Fear}}', '{{Sorrow}}', '{{Anger}}', and '{{Joy}}'. If the statements contain no imagery, generate an empty string ('')",
+                    "responseFields": ["Imagery", "hexagram"]
+                },
             },
             "sources": {
-                "Analytic Agent": "(mind, agent, query, options) => complete(mind, agent, query, options)",
-                "Fear Agent": "(mind, agent, query, options) => complete(mind, agent, query, options)",
-                "Sorrow Agent": "(mind, agent, query, options) => complete(mind, agent, query, options)",
-                "Anger Agent": "(mind, agent, query, options) => complete(mind, agent, query, options)",
-                "Joy Agent": "(mind, agent, query, options) => complete(mind, agent, query, options)",
-                "Moderator Agent": "(mind, agent, query, options) => complete(mind, agent, query, options)",
-                "Output Agent": "(mind, agent, query, options) => mind.stateMap"
+                "Analytic": (mind: any, agent: any, query: any, options: any) => complete(mind, agent, query, options),
+                "Fear": (mind: any, agent: any, query: any, options: any) => complete(mind, agent, query, options),
+                "Sorrow": (mind: any, agent: any, query: any, options: any) => complete(mind, agent, query, options),
+                "Anger": (mind: any, agent: any, query: any, options: any) => complete(mind, agent, query, options),
+                "Joy": (mind: any, agent: any, query: any, options: any) => complete(mind, agent, query, options),
+                "Integrating": (mind: any,agent: any, query: any, options: any) => complete(mind, agent, query, options),
+                "Imagery": (mind: any,agent: any, query: any, options: any) => complete(mind, agent, query, options),
+                "output": (mind: any, agent: any, query: any, options: any) => mind.stateMap,
+                "dummy": (mind: any, agent: any, query: any, options: any) => mind.stateMap
             },
             "start": {
                 "input": "It is a true pleasure to meet you."
@@ -170,23 +123,29 @@
 				: 'Enter your OpenAI API key in the chat input at the bottom of this page to get started.'
 		);
 
-		const agentNames = ['love', 'hate', 'fear', 'despair', 'hope'];
+		const agentNames = ["Analytic", "Fear", "Sorrow", "Anger", "Joy", "Integrating"];
 
-		agentNames.forEach((e, i) =>
+		agentNames.forEach((e: any, i: any) =>
 			mind.on(`after_${e}`, (event: string, mind: any, agent: string, binding: string) =>
 				agent !== 'input' || (agent === 'input' && binding === 'love')
 					? microChat.addChatMessage(
 							`${mind.stateMap.hexagram || ''} ${agent}`,
 							mind.stateMap[agent]
-					  )
+					)
 					: ''
 			)
+		);
+        ["Analytic", "Fear", "Sorrow", "Anger", "Joy", "Integrating"].forEach(e => mind.on(`${e}_result`, (event: string, mind: any, agent: string, binding: string) =>
+			microChat.addChatMessage(`${mind.stateMap.hexagram || ''} ${agent}`, mind.stateMap[e])
+		));
+        mind.on(`output_result`, (event: string, mind: any, agent: string, binding: string) =>
+			microChat.addChatMessage(`${mind.stateMap.hexagram || ''} ${agent}`, mind.stateMap[agent + '_result'])
 		);
 		mind.on(`after_output`, (event: string, mind: any, agent: string, binding: string) =>
 			microChat.addChatMessage(`${mind.stateMap.hexagram || ''} ${agent}`, mind.stateMap[agent])
 		);
-		mind.on(`after_hope`, (event: string, mind: any, agent: string, binding: string) =>
-			microChat.addChatMessage(`${mind.stateMap.hexagram || ''} ${agent}`, mind.stateMap.hope)
+		mind.on(`after_Imagery`, (event: string, mind: any, agent: string, binding: string) =>
+			microChat.addChatMessage(`${mind.stateMap.hexagram || ''} ${agent}`, mind.stateMap.Integrating)
 		);
 	});
 </script>

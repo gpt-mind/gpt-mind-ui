@@ -1,13 +1,15 @@
+import { PUBLIC_AUTOMATIC111_URL, PUBLIC_OPENAI_KEY, PUBLIC_PINECONE_ENV, PUBLIC_PINECONE_KEY, PUBLIC_PINECONE_URL } from "$env/static/public";
+
 export const config = {
     openai: {
-        key: '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',
+        key: PUBLIC_OPENAI_KEY
     },
     pinecone: {
-        environment: 'us-east1-gcp',
-        apiKey: "e4c0456a-df8d-489c-b250-f08e0e6065e8",
-        baseUrl: "https://openai-c90d475.svc.us-east1-gcp.pinecone.io",
+        environment: PUBLIC_PINECONE_ENV,
+        apiKey: PUBLIC_PINECONE_KEY,
+        baseUrl: PUBLIC_PINECONE_URL,
     },
     automatic111: {
-        baseUrl: 'http://127.0.0.1:7860/sdapi/v1/txt2img',
+        baseUrl: PUBLIC_AUTOMATIC111_URL
     }
 }

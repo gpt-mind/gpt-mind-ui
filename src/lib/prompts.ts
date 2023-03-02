@@ -47,7 +47,7 @@ export const defaultSettings = {
     engine: "text-davinci-003",
 };
 function buildExamplePreamble(responseFields: any) {
-    const pscript = (output: string) => `WHEN ANSWERING: Include a hexagram along with the requested output indicating your subjective internal state. FOR EXAMPLE:
+    const pscript = (output: string) => `WHEN ANSWERING: Along with the requested output, include a hexagram indicating your subjective internal state. Answer ONLY with a JSON object with fields "${responseFields.join('","')}" FOR EXAMPLE:
 { "hexagram": "䷧", "${output}": "When considering the Chinese Room thought experiment through a quantum mechanical lens, we could interpret it in terms of quantum information processing. In this interpretation, the man in the room and the rules he consults could be seen as classical bits of information, while the Chinese characters and the English output could be seen as quantum states." }
 { "hexagram": "䷔", "${output}": "Magnetic motors, also known as permanent magnet motors or PM motors, are electric motors that use magnets to generate rotational motion. They are a promising area of research for various applications, including electric vehicles, wind turbines, and industrial machinery, due to their potential for high efficiency and low maintenance." }
 YOUR ANSWER:

@@ -26,8 +26,8 @@
                 "Anderson Cooper": ["Don Lemon"],
                 "Don Lemon": ["Tucker Carlson"],
                 "Tucker Carlson": ["moderator"],
-                "moderator": ["output"],
-                "output": [],
+                "moderator": ["dummy"],
+                "dummy": ["input"],
             },
             "agents": {
                 "Rachel Maddow": { "prompt": "{{hexagram}} respond to the statement {{input}} in the first-person as Rachel Maddow", "responseFields": ["Rachel Maddow", "hexagram"] },
@@ -35,7 +35,7 @@
                 "Anderson Cooper": { "prompt": "{{hexagram}} respond to the statement {{Sean Hannity}} in the first-person as Anderson Cooper", "responseFields": ["Anderson Cooper", "hexagram"] },
                 "Don Lemon": { "prompt": "{{hexagram}} respond to the statement {{Anderson Cooper}} in the first-person as Don Lemon", "responseFields": ["Don Lemon", "hexagram"] },
                 "Tucker Carlson": { "prompt": "{{hexagram}} respond to the statement {{Don Lemon}} in the first-person as Tucker Carlson", "responseFields": ["Tucker Carlson", "hexagram"] },
-                "moderator": { "prompt": "As a moderator, what question would you ask the panel in response to their discussion on {{Tucker Carlson}}?", "responseFields": ["input", "hexagram"] }
+                "moderator": { "prompt": "As a moderator, generate a related question in response to {{Tucker Carlson}}?", "responseFields": ["input", "hexagram"] }
             },
             "sources": {
                 "Rachel Maddow": (mind: any, agent: any, query: any, options: any) => complete(mind, agent, query, options),
@@ -44,6 +44,7 @@
                 "Don Lemon": (mind: any, agent: any, query: any, options: any) => complete(mind, agent, query, options),
                 "Tucker Carlson": (mind: any, agent: any, query: any, options: any) => complete(mind, agent, query, options),
                 "moderator": (mind: any, agent: any, query: any, options: any) => complete(mind, agent, query, options),
+                "dummy": (mind: any, agent: any, query: any, options: any) => mind.stateMap,
                 "output": (mind: any, agent: any, query: any, options: any) => mind.stateMap
             },
             "start": { "input": "What are your predictions for the outcome of the 2022 midterm elections?" }
@@ -92,8 +93,8 @@
         mind.on(`after_output`, (event: string, mind: any, agent: string, binding: string) => 
             microChat.addChatMessage(`${mind.stateMap.hexagram || ''} ${agent}`, mind.stateMap[agent])
         )
-        mind.on(`after_hope`, (event: string, mind: any, agent: string, binding: string) => 
-            microChat.addChatMessage(`${mind.stateMap.hexagram || ''} ${agent}`, mind.stateMap.hope)
+        mind.on(`after_dummy`, (event: string, mind: any, agent: string, binding: string) => 
+            microChat.addChatMessage(`${mind.stateMap.hexagram || ''} ${agent}`, mind.stateMap.moderator)
         )
     });
     

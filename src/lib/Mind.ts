@@ -90,6 +90,10 @@ export class Mind {
                         this.stateMap[binding] = this.stateMap[agent]
                         this.emit(`after_${binding}`, this, agent, binding);
                         this.run(binding);
+                    } else {
+                        this.stateMap[`${binding}_result`] = this.stateMap[agent]
+                        this.emit(`${binding}_result`, this, agent, binding);
+                        this.run(binding);
                     }
                 }
                 varSetPromises.push(callAgent(agent, binding));
