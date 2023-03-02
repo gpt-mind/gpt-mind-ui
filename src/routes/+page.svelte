@@ -12,11 +12,11 @@
         async function complete(mind: any, agent: string, query: any, options: any) {
             const a = mind.agents.find((a: any) => a.key === agent);
             if(!a) return query;
-            const { prompt, responseFields } = a;
-            const result = await prompt.complete(query, options, responseFields);
-            return result.data.choices[0].text;
+            const { prompt, responseFields } = a.value;
+            return await prompt.complete(query, config.openai.key, options, responseFields);
         }
         let microChat: any;
+        const iChing = '䷀䷁䷂䷃䷄䷅䷆䷇䷈䷉䷊䷋䷌䷍䷎䷏䷐䷑䷒䷓䷔䷕䷖䷗䷘䷙䷚䷛䷜䷝䷞䷟䷠䷡䷢䷣䷤䷥䷦䷧䷨䷩䷪䷫䷬䷭䷮䷯䷰䷱䷲䷳䷴䷵䷶䷷䷸䷹䷺䷻䷼䷽䷾䷿'
         const mind = new Mind({
             "stateMap": {},
             "bindings": {
@@ -30,18 +30,18 @@
                 "output": [],
             },
             "agents": {
-                "agent1": { "prompt": "Given the input {{input}} and the hexagram {{hexagram}} carrying your subjective state (out of the possible ䷀䷁䷂䷃䷄䷅䷆䷇䷈䷉䷊䷋䷌䷍䷎䷏䷐䷑䷒䷓䷔䷕䷖䷗䷘䷙䷚䷛䷜䷝䷞䷟䷠䷡䷢䷣䷤䷥䷦䷧䷨䷩䷪䷫䷬䷭䷮䷯䷰䷱䷲䷳䷴䷵䷶䷷䷸䷹䷺䷻䷼䷽䷾䷿), respond with an statement representing your best understanding of the statement, as well as with the hexagram given, or one of your choosing representing your updated subjective state.", "responseFields": ["agent1", "hexagram"] },
-                "agent2": { "prompt": "Given the input {{agent1}} and the hexagram {{hexagram}} carrying your subjective state (out of the possible ䷀䷁䷂䷃䷄䷅䷆䷇䷈䷉䷊䷋䷌䷍䷎䷏䷐䷑䷒䷓䷔䷕䷖䷗䷘䷙䷚䷛䷜䷝䷞䷟䷠䷡䷢䷣䷤䷥䷦䷧䷨䷩䷪䷫䷬䷭䷮䷯䷰䷱䷲䷳䷴䷵䷶䷷䷸䷹䷺䷻䷼䷽䷾䷿), respond with an statement representing your best response of the statement, as well as with the hexagram given,  or one of your choosing representing your updated subjective state.", "responseFields": ["agent2", "hexagram"] },
-                "agent3": { "prompt": "Given the inputs '{{agent1}}' and '{{agent2}}' and the hexagram {{hexagram}} (out of the possible ䷀䷁䷂䷃䷄䷅䷆䷇䷈䷉䷊䷋䷌䷍䷎䷏䷐䷑䷒䷓䷔䷕䷖䷗䷘䷙䷚䷛䷜䷝䷞䷟䷠䷡䷢䷣䷤䷥䷦䷧䷨䷩䷪䷫䷬䷭䷮䷯䷰䷱䷲䷳䷴䷵䷶䷷䷸䷹䷺䷻䷼䷽䷾䷿), respond with an statement representing your best response of the statement (or an empty statement if that is the best response), as well as with a new hexagram of your choosing representing your updated subjective state.", "responseFields": ["agent3", "hexagram"] },
-                "think": { "prompt": "Given the inputs '{{input}}' and '{{agent3}}'' and the hexagram {{hexagram}} (out of the possible ䷀䷁䷂䷃䷄䷅䷆䷇䷈䷉䷊䷋䷌䷍䷎䷏䷐䷑䷒䷓䷔䷕䷖䷗䷘䷙䷚䷛䷜䷝䷞䷟䷠䷡䷢䷣䷤䷥䷦䷧䷨䷩䷪䷫䷬䷭䷮䷯䷰䷱䷲䷳䷴䷵䷶䷷䷸䷹䷺䷻䷼䷽䷾䷿), respond with candid internal commentary free of social mind about the response (or no internal commentary if that is the best response), as well as with the hexagram given, or one of your choosing representing your updated subjective state.", "responseFields": ["think", "hexagram"] },
-                "visualize": { "prompt": `generate a detailed visual description of the imagery in the statements "{{agent3}}" "{{think}}" if it contains imagery. Otherwise respond with an empty value`, "responseFields": ["imagery"] },
+                "agent1": { "prompt": "Given the input {{input}} and the hexagram {{hexagram}} carrying your subjective state (out of the possible ䷀䷁䷂䷃䷄䷅䷆䷇䷈䷉䷊䷋䷌䷍䷎䷏䷐䷑䷒䷓䷔䷕䷖䷗䷘䷙䷚䷛䷜䷝䷞䷟䷠䷡䷢䷣䷤䷥䷦䷧䷨䷩䷪䷫䷬䷭䷮䷯䷰䷱䷲䷳䷴䷵䷶䷷䷸䷹䷺䷻䷼䷽䷾䷿), respond with an statement representing your best understanding of the statement, as well as with the hexagram given, or one of your choosing representing your updated subjective state.", "responseFields": ["interpret", "hexagram"] },
+                "agent2": { "prompt": "Given the input {{interpret}} and the hexagram {{hexagram}} carrying your subjective state (out of the possible ䷀䷁䷂䷃䷄䷅䷆䷇䷈䷉䷊䷋䷌䷍䷎䷏䷐䷑䷒䷓䷔䷕䷖䷗䷘䷙䷚䷛䷜䷝䷞䷟䷠䷡䷢䷣䷤䷥䷦䷧䷨䷩䷪䷫䷬䷭䷮䷯䷰䷱䷲䷳䷴䷵䷶䷷䷸䷹䷺䷻䷼䷽䷾䷿), respond with an statement representing your best response of the statement, as well as with the hexagram given,  or one of your choosing representing your updated subjective state.", "responseFields": ["response", "hexagram"] },
+                "agent3": { "prompt": "Given the inputs '{{interpret}}' and '{{response}}' and the hexagram {{hexagram}} (out of the possible ䷀䷁䷂䷃䷄䷅䷆䷇䷈䷉䷊䷋䷌䷍䷎䷏䷐䷑䷒䷓䷔䷕䷖䷗䷘䷙䷚䷛䷜䷝䷞䷟䷠䷡䷢䷣䷤䷥䷦䷧䷨䷩䷪䷫䷬䷭䷮䷯䷰䷱䷲䷳䷴䷵䷶䷷䷸䷹䷺䷻䷼䷽䷾䷿), respond with an statement representing your best response of the statement (or an empty statement if that is the best response), as well as with a new hexagram of your choosing representing your updated subjective state.", "responseFields": ["output", "hexagram"] },
+                "think": { "prompt": "Given the inputs '{{input}}' and '{{output}}'' and the hexagram {{hexagram}} (out of the possible ䷀䷁䷂䷃䷄䷅䷆䷇䷈䷉䷊䷋䷌䷍䷎䷏䷐䷑䷒䷓䷔䷕䷖䷗䷘䷙䷚䷛䷜䷝䷞䷟䷠䷡䷢䷣䷤䷥䷦䷧䷨䷩䷪䷫䷬䷭䷮䷯䷰䷱䷲䷳䷴䷵䷶䷷䷸䷹䷺䷻䷼䷽䷾䷿), respond with candid internal commentary free of social mind about the response (or no internal commentary if that is the best response), as well as with the hexagram given, or one of your choosing representing your updated subjective state.", "responseFields": ["think", "hexagram"] },
+                "visualize": { "prompt": `generate a detailed visual description of the imagery in the statements "{{response}}" "{{think}}" if it contains imagery. Otherwise respond with an empty value`, "responseFields": ["image", "hexagram"] },
             },
             start: { "input": "I wonder what would happen if we reran the Chinese Room thought experiment while applying the rules of quantum mechanics..", },
+            //start: { "input": "Do you remember that day on our honeymoon when we saw the Golden Gate bridge?", },
             sources: {
                 "agent1": (mind: any, agent: any, query: any, options: any) => complete(mind, agent, query, options),
                 "agent2": (mind: any, agent: any, query: any, options: any) => complete(mind, agent, query, options),
                 "agent3": (mind: any, agent: any, query: any, options: any) => complete(mind, agent, query, options),
-                "agent4": (mind: any, agent: any, query: any, options: any) => complete(mind, agent, query, options),
                 "think": (mind: any, agent: any, query: any, options: any) => complete(mind, agent, query, options),
                 "visualize": (mind: any, agent: any, query: any, options: any) => complete(mind, agent, query, options),
                 "image": (mind: any, agent: any, query: any, options: any) => Automatic111.txt2img(query, "", { steps: 20 }),
@@ -49,19 +49,13 @@
             }
         });
     
-        mind.on('after_output', (event: string, mind: any) => 
+        mind.on('after_think', (event: string, mind: any) => 
             microChat.addChatMessage('AI', mind.stateMap.output) 
         );
-        ['agent1','agent2','agent3'].forEach((key) => 
-            mind.on(`after_${key}`, (event: string, mind: any) => 
-                microChat.addToPanel(key, mind.stateMap[key]) 
-            )
-        );
-        ['think','visualize'].forEach((key) => 
-            mind.on(`after_${key}`, (event: string, mind: any) => 
-                microChat.addToPanel(key, mind.stateMap[key]) 
-            )
-        );
+
+        ['agent1','agent2','agent3','think','visualize'].forEach(e => mind.on(`after_${e}`, (event: string, mind: any) => 
+            microChat.addToPanel('panel1', Object.keys(mind.stateMap).map(e => `${e}: ${mind.stateMap[e]}`).join('\n')) 
+        ));
         microChat = new MicroChat(
             'app', 
             ['Agent', 'Human'],

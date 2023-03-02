@@ -28,12 +28,8 @@ export default class MicroChat {
                 <style>${this.css()}</style>
                 <div id="notification" class="chat-notification"></div>
                 <div class="chat-internals">
-                    <pre class="internals-panel" id="agent1"></pre>
-                    <pre class="internals-panel" id="agent2"></pre>
-                    <pre class="internals-panel" id="agent3"></pre>
-                    <pre class="internals-panel" id="agent4"></pre>
-                    <pre class="internals-panel" id="thoughts"></pre>
-                    <pre class="internals-panel" id="imagery"></pre>
+                    <pre class="internals-panel" id="panel1"></pre>
+                    <pre class="internals-panel" id="transcript"></pre>
                 </div>
                 <div id="emotions" class="emotion-bar"></div>
                 <div class="chat-history"></div>
@@ -196,10 +192,11 @@ export default class MicroChat {
             border: 1px solid #333;
             margin: 5px;
             border-radius: 5px;
-            min-height: 80px;
-            max-height: 80px;
+            min-height: 180px;
+            max-height: 180px;
             font-size: 8px;
             margin: 5px;
+            max-width: 600px;
             overflow: scroll-y;
         }
 		.chat-history {
@@ -207,13 +204,15 @@ export default class MicroChat {
 			padding: 10px;
 			overflow-y: scroll;
 			background-color: #fff;
-            max-height: 80%;
+            max-height: 800px;
+
 		}
 		.chat-message {
             background-color: #fff;
 			border: 1px solid #333;
 			border-radius: 5px;
 			margin-bottom: 10px;
+            max-width: 800px;
             padding:10px;
 		}
 		.chat-message:last-child {

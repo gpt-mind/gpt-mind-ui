@@ -1,6 +1,6 @@
 export const config = {
     openai: {
-        key: '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',
+        key: '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',
     },
     pinecone: {
         environment: 'us-east1-gcp',

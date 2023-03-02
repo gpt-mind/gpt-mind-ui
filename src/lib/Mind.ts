@@ -26,29 +26,32 @@ export class Mind {
         }
     }
 
-    public on(event: string, callback: (event: string, output: string) => void) {
-        if(!this.events[event]) { this.events[event] = [] }
+    public on(event: string, callback: (event: string, output: string, agent: string, binding: string) => void) {
+        if(!this.events[event]) { this.events[event] = []; }
         this.events[event].push(callback);
     }
 
-    public once(event: string, callback: (event: string, output: string) => void) {
-        const cb = (output: string) => { this.off(event, cb); callback(event, output) };
+    public once(event: string, callback: (event: string, output: string, agent: string, binding: string) => void) {
+        const cb = (event: string, output: string, agent: string, binding: string) => {
+            this.off(event, cb);
+            callback(event, output, agent, binding);
+        }
         this.on(event, cb);
     }
 
-    public off(event: string, callback: (event: string, output: string) => void) {
+    public off(event: string, callback: (event: string, output: string, agent: string, binding: string) => void) {
         if(!this.events[event]) { return; }
         this.events[event] = this.events[event].filter((cb: (output: string) => void) => cb !== callback);
     }
 
-    public emit(event: string, output: any) {
-        if(this.events[event])this.events[event].forEach((cb: (event: string, output: any) => void) => cb(event, output));
+    public emit(event: string, output: any, agent: string, binding: string) {
+        if(this.events[event])this.events[event].forEach((cb: (event: string, output: any, agent: string, binding: string) => void) => cb(event, output, agent, binding));
         if(event.endsWith('*')) {
             const tevent = event.substring(0, event.length - 1);
             const events = Object.keys(this.events).filter((key) => key.startsWith(tevent));
-            events.forEach((key) => this.events[key].forEach((cb: (event: string, output: any) => void) => cb(event, output)));
+            events.forEach((key) => this.events[key].forEach((cb: (event: string, output: any, agent: string, binding: string) => void) => cb(event, output, agent, binding)));
         }
-        if(this.events['*']) this.events['*'].forEach((cb: (event: string, output: any) => void) => cb(event, output));
+        if(this.events['*']) this.events['*'].forEach((cb: (event: string, output: any, agent: string, binding: string) => void) => cb(event, output, agent, binding));
     }
 
     public async input(agent: string, query: string) {
@@ -61,29 +64,39 @@ export class Mind {
         // get the output bindings
         const bindings = this.bindings[agent];
         if(!bindings) { throw new Error(`No bindings for agent ${agent}`); }
+        const agentPromises: any = [];
+        const varSetPromises: any = [];
         for(const binding of bindings) {
             const { value } = this.agents.find(async ({ key,}: any) => key === binding);
             const { prompt, responseFields } = value;
-            if(prompt) {    
-                this.emit(`before_${binding}`, this);
-                if(this.sources[binding]) {
-                    const jsonResult = await this.sources[binding](this, this.stateMap, { temperature: 0.9 }, responseFields ? responseFields : ["result"]);
-                    Object.keys(jsonResult).forEach((key) => this.stateMap[key] = jsonResult[key]);
-                } else { 
-                    const jsonResult = await prompt.complete(this.stateMap, config.openai.key, { temperature: 0.9 }, responseFields ? responseFields : ["result"]);
-                    Object.keys(jsonResult).forEach((key) => this.stateMap[key] = jsonResult[key]);
+            if(prompt) {
+                const callAgent = async (agent: string, binding: string) => {
+                    this.emit(`before_${binding}`, this, agent, binding);
+                    if(this.sources[binding]) {
+                        const jsonResult = await this.sources[binding](this, agent, this.stateMap, { temperature: 0.9 }, responseFields ? responseFields : ["result"]);
+                        if(jsonResult) Object.keys(jsonResult).forEach((key) => this.stateMap[key] = jsonResult[key]);
+                    } else { 
+                        const jsonResult = await prompt.complete(this.stateMap, config.openai.key, { temperature: 0.9 }, responseFields ? responseFields : ["result"]);
+                        if(jsonResult) Object.keys(jsonResult).forEach((key) => this.stateMap[key] = jsonResult[key]);
+                    }
+                    this.emit(`after_${binding}`, this, agent, binding);
+                    return this.run(binding);
                 }
-                this.emit(`after_${binding}`, this);
-                this.run(binding);
+                agentPromises.push(callAgent(agent, binding));
             }
-            else {
-                if(binding !== "") {
-                    this.stateMap[binding] = this.stateMap[agent]
-                    this.emit(`after_${binding}`, this);
-                    this.run(binding);
+            else  {
+                const callAgent = async (agent: string, binding: string) => {
+                    if(binding !== "") {
+                        this.stateMap[binding] = this.stateMap[agent]
+                        this.emit(`after_${binding}`, this, agent, binding);
+                        this.run(binding);
+                    }
                 }
+                varSetPromises.push(callAgent(agent, binding));
             }
         }
+        await Promise.all(agentPromises);
+        await Promise.all(varSetPromises);
     }
 
     public async complete(agent: any,  query: string, options: any) {

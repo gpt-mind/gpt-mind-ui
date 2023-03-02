@@ -36,10 +36,10 @@ export function validatePrompt(prompt: any, params: { [x: string]: any; }) {
 }
 export const defaultSettings = {
     maxTokens: 1024,
-    temperature: 0.7,
+    temperature: 0.9,
     topP: 1,
-    frequencyPenalty: 0.5,
-    presencePenalty: 0.5,
+    frequencyPenalty: 0.7,
+    presencePenalty: 0.7,
     bestOf: 1,
     n: 1,
     stream: false,
@@ -47,12 +47,12 @@ export const defaultSettings = {
     engine: "text-davinci-003",
 };
 function buildExamplePreamble(responseFields: any) {
-    const fields = responseFields.reduce((acc: any, field: any) => {
-        acc[field] = `<${field}>`;
-        return acc;
-    }, {} );
-    const p = `  Respond using a JSON object with the following fields: ${responseFields.join(', ')}  For example:\n${JSON.stringify(fields)}\nYour response\n{"${responseFields[0]}":`;
-    return p.replace(/\\(?!n)/g, '');
+    const pscript = (output: string) => `WHEN ANSWERING: Include a hexagram along with the requested output indicating your subjective internal state. FOR EXAMPLE:
+{ "hexagram": "䷧", "${output}": "When considering the Chinese Room thought experiment through a quantum mechanical lens, we could interpret it in terms of quantum information processing. In this interpretation, the man in the room and the rules he consults could be seen as classical bits of information, while the Chinese characters and the English output could be seen as quantum states." }
+{ "hexagram": "䷔", "${output}": "Magnetic motors, also known as permanent magnet motors or PM motors, are electric motors that use magnets to generate rotational motion. They are a promising area of research for various applications, including electric vehicles, wind turbines, and industrial machinery, due to their potential for high efficiency and low maintenance." }
+YOUR ANSWER:
+{ "hexagram": "`;
+    return pscript(responseFields[0]);
 }
 export function getPromptDefinition(prompt: string) {
     const tokens = extractReplacementTokens(prompt);
